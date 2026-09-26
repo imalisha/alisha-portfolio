@@ -959,7 +959,7 @@ function App() {
               <div className="project-image">
 
                 <img
-                  src="/projects/speech-emotion.png"
+                  src="/projects/speech-emotion.jpeg"
                   alt="Speech Emotion Detection application"
                   loading="lazy"
                 />
