@@ -1243,9 +1243,9 @@ function App() {
                 University of Agriculture Faisalabad
               </p>
 
-              <p className="education-year">
+              {/* <p className="education-year">
                 2021 — 2025
-              </p>
+              </p> */}
 
             </div>
 
