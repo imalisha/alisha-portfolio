@@ -1,11 +1,66 @@
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem("portfolio-theme");
+    return savedTheme || "dark";
+  });
+
+  const [timeSpent, setTimeSpent] = useState(0);
+
+  /* ================= THEME ================= */
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("portfolio-theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((currentTheme) =>
+      currentTheme === "dark" ? "light" : "dark"
+    );
+  };
+
+  /* ================= TIME SPENT ================= */
+
+  useEffect(() => {
+    const startTime = Date.now();
+
+    const timer = setInterval(() => {
+      const seconds = Math.floor(
+        (Date.now() - startTime) / 1000
+      );
+
+      setTimeSpent(seconds);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    if (hours > 0) {
+      return `${hours}h ${String(minutes).padStart(2, "0")}m`;
+    }
+
+    if (minutes > 0) {
+      return `${minutes}m ${String(remainingSeconds).padStart(2, "0")}s`;
+    }
+
+    return `00:${String(remainingSeconds).padStart(2, "0")}`;
+  };
+
   return (
-    <div className="portfolio">
+    <div className={`portfolio ${theme}-theme`}>
 
       {/* ================= NAVBAR ================= */}
+
       <header className="navbar">
+
         <div className="nav-container">
 
           <a href="#home" className="logo">
@@ -21,18 +76,47 @@ function App() {
             <a href="#contact">Contact</a>
           </nav>
 
-          <a href="#contact" className="nav-button">
-            Let's Talk
-          </a>
+          <div className="nav-actions">
+
+            {/* TIME SPENT */}
+
+            <div className="visitor-timer" title="Time spent on portfolio">
+              <span className="timer-icon">◷</span>
+              <span>{formatTime(timeSpent)}</span>
+            </div>
+
+            {/* THEME BUTTON */}
+
+            <button
+              className="theme-toggle"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              title={
+                theme === "dark"
+                  ? "Switch to light mode"
+                  : "Switch to dark mode"
+              }
+            >
+              {theme === "dark" ? "☀" : "☾"}
+            </button>
+
+            <a href="#contact" className="nav-button">
+              Let's Talk
+            </a>
+
+          </div>
 
         </div>
+
       </header>
 
 
       {/* ================= MAIN ================= */}
+
       <main>
 
         {/* ================= HERO ================= */}
+
         <section id="home" className="hero">
 
           <div className="hero-container">
@@ -64,12 +148,18 @@ function App() {
 
               <div className="hero-buttons">
 
-                <a href="#projects" className="primary-button">
+                <a
+                  href="#projects"
+                  className="primary-button"
+                >
                   View My Work
                   <span>→</span>
                 </a>
 
-                <a href="#contact" className="secondary-button">
+                <a
+                  href="#contact"
+                  className="secondary-button"
+                >
                   Let's Work Together
                 </a>
 
@@ -103,6 +193,7 @@ function App() {
 
 
             {/* ================= HERO CARD ================= */}
+
             <div className="hero-visual">
 
               <div className="glow glow-one"></div>
@@ -166,11 +257,13 @@ function App() {
                     </div>
 
                     <div>
-                      <span className="tech-icon HTML">
+                      <span className="tech-icon html">
                         HTML
                       </span>
 
-                      <span>HTML / CSS / Bootstrap / JavaScript</span>
+                      <span>
+                        HTML / CSS / Bootstrap / JavaScript
+                      </span>
 
                       <strong>03</strong>
                     </div>
@@ -228,7 +321,11 @@ function App() {
 
 
         {/* ================= ABOUT ================= */}
-        <section id="about" className="section about-section">
+
+        <section
+          id="about"
+          className="section about-section"
+        >
 
           <div className="section-heading">
 
@@ -247,21 +344,21 @@ function App() {
             <div className="about-text">
 
               <p>
-                I'm an IT graduate and Python Full-Stack Developer with
-                hands-on experience in web development, backend APIs,
-                AI solutions, and workflow automation.
+                I'm an IT graduate and Python Full-Stack Developer
+                with hands-on experience in web development,
+                backend APIs, AI solutions, and workflow automation.
               </p>
 
               <p>
-                My work combines Python, Django, Flask, React, REST APIs,
-                databases, AI services, and n8n automation to build
-                practical full-stack solutions.
+                My work combines Python, Django, Flask, React,
+                REST APIs, databases, AI services, and n8n
+                automation to build practical full-stack solutions.
               </p>
 
               <p>
-                I enjoy solving repetitive problems through automation
-                and creating applications that connect modern interfaces,
-                backend systems, APIs, and AI.
+                I enjoy solving repetitive problems through
+                automation and creating applications that connect
+                modern interfaces, backend systems, APIs, and AI.
               </p>
 
             </div>
@@ -271,33 +368,53 @@ function App() {
 
               <div className="highlight-card">
                 <span>01</span>
-                <h3>Full-Stack Development</h3>
+
+                <h3>
+                  Full-Stack Development
+                </h3>
+
                 <p>
-                  Building frontend interfaces, backend systems and APIs.
+                  Building frontend interfaces, backend systems
+                  and APIs.
                 </p>
               </div>
 
               <div className="highlight-card">
                 <span>02</span>
-                <h3>AI Solutions</h3>
+
+                <h3>
+                  AI Solutions
+                </h3>
+
                 <p>
-                  Integrating AI services into practical applications.
+                  Integrating AI services into practical
+                  applications.
                 </p>
               </div>
 
               <div className="highlight-card">
                 <span>03</span>
-                <h3>Workflow Automation</h3>
+
+                <h3>
+                  Workflow Automation
+                </h3>
+
                 <p>
-                  Designing multi-step n8n workflows and API integrations.
+                  Designing multi-step n8n workflows and
+                  API integrations.
                 </p>
               </div>
 
               <div className="highlight-card">
                 <span>04</span>
-                <h3>Problem Solving</h3>
+
+                <h3>
+                  Problem Solving
+                </h3>
+
                 <p>
-                  Turning repetitive manual tasks into automated processes.
+                  Turning repetitive manual tasks into
+                  automated processes.
                 </p>
               </div>
 
@@ -309,7 +426,11 @@ function App() {
 
 
         {/* ================= SKILLS ================= */}
-        <section id="skills" className="section skills-section">
+
+        <section
+          id="skills"
+          className="section skills-section"
+        >
 
           <div className="section-heading">
 
@@ -419,7 +540,11 @@ function App() {
 
 
         {/* ================= PROJECTS ================= */}
-        <section id="projects" className="section projects-section">
+
+        <section
+          id="projects"
+          className="section projects-section"
+        >
 
           <div className="section-heading">
 
@@ -442,9 +567,7 @@ function App() {
           <div className="projects-grid">
 
 
-            {/* =====================================================
-                01 — EDUFLOW AI
-            ====================================================== */}
+            {/* ================= 01 EDUFLOW ================= */}
 
             <article className="project-card featured-project">
 
@@ -453,7 +576,6 @@ function App() {
                 <img
                   src="/projects/eduflow.png"
                   alt="EduFlow AI project"
-                  loading="lazy"
                 />
 
                 <div className="image-overlay">
@@ -469,19 +591,18 @@ function App() {
                   FEATURED • LIVE
                 </div>
 
-                <h3>
-                  EduFlow AI
-                </h3>
+                <h3>EduFlow AI</h3>
 
                 <p className="project-subtitle">
                   AI-Powered Education & Automated Grading Platform
                 </p>
 
                 <p>
-                  A full-stack teacher and student education platform
-                  built with React and Supabase. Includes assignments,
-                  submissions, grading, feedback, and automated AI
-                  grading using n8n and Gemini.
+                  A full-stack teacher and student education
+                  platform built with React and Supabase.
+                  Includes assignments, submissions, grading,
+                  feedback, and automated AI grading using n8n
+                  and Gemini.
                 </p>
 
                 <div className="project-tech">
@@ -516,9 +637,8 @@ function App() {
 
             </article>
 
-            {/* =====================================================
-                02 — BARISTA CAFE
-            ====================================================== */}
+
+            {/* ================= 02 BARISTA ================= */}
 
             <article className="project-card">
 
@@ -543,9 +663,7 @@ function App() {
                   DJANGO APPLICATION
                 </div>
 
-                <h3>
-                  Barista Café
-                </h3>
+                <h3>Barista Café</h3>
 
                 <p className="project-subtitle">
                   Django Web Application
@@ -588,9 +706,9 @@ function App() {
               </div>
 
             </article>
-            {/* =====================================================
-                03 — AI & N8N AUTOMATION
-            ====================================================== */}
+
+
+            {/* ================= 03 AUTOMATION ================= */}
 
             <article className="project-card">
 
@@ -624,10 +742,11 @@ function App() {
                 </p>
 
                 <p>
-                  Created multi-step automation workflows for LinkedIn
-                  content generation, content pipelines, sales emails,
-                  and follow-up processes. Integrated APIs and AI
-                  services to automate repetitive business tasks.
+                  Created multi-step automation workflows for
+                  LinkedIn content generation, content pipelines,
+                  sales emails, and follow-up processes.
+                  Integrated APIs and AI services to automate
+                  repetitive business tasks.
                 </p>
 
                 <div className="project-tech">
@@ -642,9 +761,7 @@ function App() {
             </article>
 
 
-            {/* =====================================================
-                04 — NOWICON CANVA
-            ====================================================== */}
+            {/* ================= 04 CANVA ================= */}
 
             <article className="project-card">
 
@@ -674,18 +791,18 @@ function App() {
                 </h3>
 
                 <p className="project-subtitle">
-                  Canva Plugin on browser
+                  Canva Plugin & Browser-Based Project
                 </p>
 
                 <p>
-                  A Canva plugin project developed as part of practical
-                  plugin work. The project explores plugin-based 
-                  functionality and integration with the
-                  Canva environment.
+                  A Canva plugin project developed as part of
+                  practical plugin work. The project explores
+                  plugin-based functionality and integration
+                  with the Canva environment.
                 </p>
 
                 <div className="project-tech">
-                  <span>react</span>
+                  <span>React</span>
                   <span>JavaScript</span>
                   <span>Canva</span>
                   <span>APIs</span>
@@ -709,9 +826,7 @@ function App() {
             </article>
 
 
-            {/* =====================================================
-                05 — HEALTHBUDDY
-            ====================================================== */}
+            {/* ================= 05 HEALTHBUDDY ================= */}
 
             <article className="project-card">
 
@@ -736,19 +851,18 @@ function App() {
                   UNIVERSITY FYP
                 </div>
 
-                <h3>
-                  HealthBuddy
-                </h3>
+                <h3>HealthBuddy</h3>
 
                 <p className="project-subtitle">
                   Healthcare Web Application
                 </p>
 
                 <p>
-                  A university final-year project developed as part
-                  of my BS Information Technology degree. HealthBuddy
-                  focuses on providing a healthcare-oriented web
-                  application and user-focused digital experience.
+                  A university final-year project developed as
+                  part of my BS Information Technology degree.
+                  HealthBuddy focuses on providing a
+                  healthcare-oriented web application and
+                  user-focused digital experience.
                 </p>
 
                 <div className="project-tech">
@@ -775,9 +889,7 @@ function App() {
             </article>
 
 
-            {/* =====================================================
-                06 — NOWICON FIGMA
-            ====================================================== */}
+            {/* ================= 06 FIGMA ================= */}
 
             <article className="project-card">
 
@@ -811,9 +923,9 @@ function App() {
                 </p>
 
                 <p>
-                  A Figma plugin project developed to work with the
-                  Figma plugin environment and support design-related
-                  functionality and automation.
+                  A Figma plugin project developed to work with
+                  the Figma plugin environment and support
+                  design-related functionality and automation.
                 </p>
 
                 <div className="project-tech">
@@ -840,16 +952,14 @@ function App() {
             </article>
 
 
-            {/* =====================================================
-                07 — SPEECH EMOTION DETECTION
-            ====================================================== */}
+            {/* ================= 07 SPEECH EMOTION ================= */}
 
             <article className="project-card">
 
               <div className="project-image">
 
                 <img
-                  src="/projects/speech-emotion.jpeg"
+                  src="/projects/speech-emotion.png"
                   alt="Speech Emotion Detection application"
                   loading="lazy"
                 />
@@ -876,10 +986,11 @@ function App() {
                 </p>
 
                 <p>
-                  A speech emotion detection project developed using
-                  Flutter with a Flask backend. The application works
-                  with speech/audio input and AI/ML functionality to
-                  identify emotions from speech.
+                  A speech emotion detection project developed
+                  using Flutter with a Flask backend. The
+                  application works with speech/audio input
+                  and AI/ML functionality to identify emotions
+                  from speech.
                 </p>
 
                 <div className="project-tech">
@@ -895,10 +1006,7 @@ function App() {
             </article>
 
 
-
-            {/* =====================================================
-                08 — NOVA AI
-            ====================================================== */}
+            {/* ================= 08 NOVA AI ================= */}
 
             <article className="project-card">
 
@@ -923,20 +1031,18 @@ function App() {
                   DESKTOP AI ASSISTANT
                 </div>
 
-                <h3>
-                  NOVA AI
-                </h3>
+                <h3>NOVA AI</h3>
 
                 <p className="project-subtitle">
                   Voice-Controlled Windows Desktop Assistant
                 </p>
 
                 <p>
-                  A Python and PySide6 desktop assistant designed to
-                  interact with a Windows computer using voice and text
-                  commands. The project combines voice interaction,
-                  AI capabilities, application control, and desktop
-                  automation.
+                  A Python and PySide6 desktop assistant designed
+                  to interact with a Windows computer using voice
+                  and text commands. The project combines voice
+                  interaction, AI capabilities, application
+                  control, and desktop automation.
                 </p>
 
                 <div className="project-tech">
@@ -946,24 +1052,26 @@ function App() {
                   <span>Automation</span>
                   <span>Windows</span>
                 </div>
-                <a
-                  href="https://github.com/imalisha/NOVA-ai"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  GitHub ↗
-                </a>
-                <a
-              >
-                <span>Live Soon</span>
-                
-              </a>
-                
+
+                <div className="project-links">
+
+                  <a
+                    href="https://github.com/imalisha/NOVA-ai"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    GitHub ↗
+                  </a>
+
+                  <span className="coming-soon">
+                    Live Soon
+                  </span>
+
+                </div>
 
               </div>
 
             </article>
-
 
           </div>
 
@@ -971,7 +1079,11 @@ function App() {
 
 
         {/* ================= EXPERIENCE ================= */}
-        <section id="experience" className="section experience-section">
+
+        <section
+          id="experience"
+          className="section experience-section"
+        >
 
           <div className="section-heading">
 
@@ -986,6 +1098,7 @@ function App() {
 
 
           <div className="experience-list">
+
 
             {/* SHAYAN SOLUTIONS */}
 
@@ -1011,28 +1124,25 @@ function App() {
 
                   </div>
 
-                  {/* <span className="experience-number">
-                    01
-                  </span> */}
-
                 </div>
 
                 <ul>
 
                   <li>
-                    Built 5+ n8n automation workflows for LinkedIn
-                    content generation, sales email automation,
-                    follow-ups, and content pipelines.
+                    Built 5+ n8n automation workflows for
+                    LinkedIn content generation, sales email
+                    automation, follow-ups, and content pipelines.
                   </li>
 
                   <li>
-                    Developed React-based browser plugins and web
-                    automation tools integrated with APIs.
+                    Developed React-based browser plugins and
+                    web automation tools integrated with APIs.
                   </li>
 
                   <li>
-                    Worked on automation solutions designed to reduce
-                    repetitive manual tasks and improve business workflows.
+                    Worked on automation solutions designed to
+                    reduce repetitive manual tasks and improve
+                    business workflows.
                   </li>
 
                   <li>
@@ -1071,17 +1181,14 @@ function App() {
 
                   </div>
 
-                  {/* <span className="experience-number">
-                    02
-                  </span> */}
-
                 </div>
 
                 <ul>
 
                   <li>
-                    Developed a Flutter-based speech emotion detection
-                    application using speech processing and AI/ML models.
+                    Developed a Flutter-based speech emotion
+                    detection application using speech processing
+                    and AI/ML models.
                   </li>
 
                   <li>
@@ -1090,8 +1197,8 @@ function App() {
                   </li>
 
                   <li>
-                    Worked on real-time audio processing and chatbot
-                    features.
+                    Worked on real-time audio processing and
+                    chatbot features.
                   </li>
 
                   <li>
@@ -1111,6 +1218,7 @@ function App() {
 
 
         {/* ================= EDUCATION ================= */}
+
         <section className="section education-section">
 
           <div className="education-card">
@@ -1135,11 +1243,11 @@ function App() {
                 University of Agriculture Faisalabad
               </p>
 
-            </div>
+              <p className="education-year">
+                2021 — 2025
+              </p>
 
-            {/* <span className="education-year">
-              2021 — 2025
-            </span> */}
+            </div>
 
           </div>
 
@@ -1147,7 +1255,11 @@ function App() {
 
 
         {/* ================= CONTACT ================= */}
-        <section id="contact" className="contact-section">
+
+        <section
+          id="contact"
+          className="contact-section"
+        >
 
           <div className="contact-container">
 
@@ -1216,6 +1328,7 @@ function App() {
 
 
         {/* ================= FOOTER ================= */}
+
         <footer className="footer">
 
           <div>
@@ -1232,9 +1345,18 @@ function App() {
 
           </div>
 
-          <p className="copyright">
-            © 2026 Alisha Malik
-          </p>
+
+          <div className="footer-right">
+
+            <div className="footer-time">
+              ⏱ {formatTime(timeSpent)} on portfolio
+            </div>
+
+            <p className="copyright">
+              © 2026 Alisha Malik
+            </p>
+
+          </div>
 
         </footer>
 
